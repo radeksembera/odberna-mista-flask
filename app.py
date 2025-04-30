@@ -72,6 +72,40 @@ def logout():
     session.clear()
     return redirect("/login")
 
+@app.route("/profil", methods=["GET", "POST"])
+def profil():
+    if not session.get("user_id"):
+        return redirect("/login")
+    
+    conn = get_db_connection()
+    cur = conn.cursor()
+    user_id = session["user_id"]
+
+    if request.method == "POST":
+        sro = request.form["sro"]
+        adr1 = request.form["adr1"]
+        adr2 = request.form["adr2"]
+        ico = request.form["ico"]
+        dic = request.form["dic"]
+        zapis = request.form["zapis"]
+        banka = request.form["banka"]
+        ucet = request.form["ucet"]
+        swift = request.form["swift"]
+        iban = request.form["iban"]
+
+        cur.execute("""
+            UPDATE users SET 
+                sro=%s, adr1=%s, adr2=%s, ico=%s, dic=%s, zapis=%s, 
+                banka=%s, ucet=%s, swift=%s, iban=%s
+            WHERE id=%s
+        """, (sro, adr1, adr2, ico, dic, zapis, banka, ucet, swift, iban, user_id))
+        conn.commit()
+
+    cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user = cur.fetchone()
+    conn.close()
+    return render_template("profil.html", user=user)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

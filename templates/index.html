@@ -10,7 +10,7 @@
     <div class="container">
         <div class="d-flex justify-content-between mb-4">
             <h1>Seznam odběrných míst</h1>
-            <div><strong>{{ session['username'] }}</strong> | <a href="/logout">Odhlásit</a></div>
+            <div><strong>{{ session['username'] }}</strong> | <a href="{{ url_for('profil') }}">Můj profil</a> | <a href="/logout">Odhlásit</a></div>
         </div>
         <form method="post" action="/add" class="row g-3 mb-4">
             <div class="col-md-4">

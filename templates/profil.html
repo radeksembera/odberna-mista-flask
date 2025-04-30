@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Úprava profilu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h2>Úprava údajů dodavatele</h2>
+    <form method="POST">
+        <label>SRO: <input name="sro" value="{{ user.sro or '' }}" type="text"></label>
+        <label>Adr. řádek 1: <input name="adr1" value="{{ user.adr1 or '' }}" type="text"></label>
+        <label>Adr. řádek 2: <input name="adr2" value="{{ user.adr2 or '' }}" type="text"></label>
+        <label>IČO: <input name="ico" value="{{ user.ico or '' }}" type="text"></label>
+        <label>DIČ: <input name="dic" value="{{ user.dic or '' }}" type="text"></label>
+        <label>Zápis: <input name="zapis" value="{{ user.zapis or '' }}" type="text"></label>
+        <label>Banka: <input name="banka" value="{{ user.banka or '' }}" type="text"></label>
+        <label>Číslo účtu: <input name="ucet" value="{{ user.ucet or '' }}" type="text"></label>
+        <label>SWIFT: <input name="swift" value="{{ user.swift or '' }}" type="text"></label>
+        <label>IBAN: <input name="iban" value="{{ user.iban or '' }}" type="text"></label>
+        <button type="submit">Uložit změny</button>
+    </form>
+    <a href="/">← Zpět</a>
+</body>
+</html>
