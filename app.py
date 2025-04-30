@@ -1,15 +1,17 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+import psycopg2
+import psycopg2.extras
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "tajny_klic"
-DATABASE = 'odberna_mista_login.db'
+
+# Získáme URL připojení z Renderu
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=psycopg2.extras.DictCursor)
     return conn
 
 @app.route("/")
@@ -17,7 +19,9 @@ def index():
     if not session.get("user_id"):
         return redirect("/login")
     conn = get_db_connection()
-    mista = conn.execute("SELECT * FROM odberna_mista").fetchall()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM odberna_mista")
+    mista = cur.fetchall()
     conn.close()
     return render_template("index.html", mista=mista)
 
@@ -28,7 +32,8 @@ def add():
     id_mista = request.form["id_mista"]
     popis = request.form["popis"]
     conn = get_db_connection()
-    conn.execute("INSERT INTO odberna_mista (id_mista, popis) VALUES (?, ?)", (id_mista, popis))
+    cur = conn.cursor()
+    cur.execute("INSERT INTO odberna_mista (id_mista, popis) VALUES (%s, %s)", (id_mista, popis))
     conn.commit()
     conn.close()
     return redirect("/")
@@ -38,7 +43,8 @@ def delete(id):
     if not session.get("user_id"):
         return redirect("/login")
     conn = get_db_connection()
-    conn.execute("DELETE FROM odberna_mista WHERE id = ?", (id,))
+    cur = conn.cursor()
+    cur.execute("DELETE FROM odberna_mista WHERE id = %s", (id,))
     conn.commit()
     conn.close()
     return redirect("/")
@@ -49,7 +55,9 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         conn = get_db_connection()
-        user = conn.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cur.fetchone()
         conn.close()
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
@@ -63,8 +71,6 @@ def login():
 def logout():
     session.clear()
     return redirect("/login")
-
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
