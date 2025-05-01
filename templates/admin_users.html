@@ -16,3 +16,20 @@
 </table>
 
 <a href="/">Zpět na hlavní stránku</a>
+
+<h2>Přidat nového uživatele</h2>
+<form method="post">
+  <label>Uživatelské jméno:</label><br>
+  <input type="text" name="username" required><br>
+
+  <label>Heslo:</label><br>
+  <input type="password" name="password" required><br>
+
+  <label>Role:</label><br>
+  <select name="role" required>
+    <option value="user">user</option>
+    <option value="admin">admin</option>
+  </select><br><br>
+
+  <button type="submit">Přidat uživatele</button>
+</form>

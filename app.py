@@ -107,7 +107,7 @@ def profil():
     conn.close()
     return render_template("profil.html", user=user)
 
-@app.route("/admin/users")
+@app.route("/admin/users", methods=["GET", "POST"])
 def admin_users():
     if not session.get("user_id"):
         return redirect("/login")
@@ -117,6 +117,22 @@ def admin_users():
 
     conn = get_db_connection()
     cur = conn.cursor()
+
+    # ZPRACOVÁNÍ FORMULÁŘE
+    if request.method == "POST":
+        new_username = request.form["username"]
+        new_password = request.form["password"]
+        new_role = request.form["role"]
+
+        password_hash = generate_password_hash(new_password)
+
+        cur.execute(
+            "INSERT INTO users (username, password_hash, role) VALUES (%s, %s, %s)",
+            (new_username, password_hash, new_role)
+        )
+        conn.commit()
+
+    # ZOBRAZENÍ VŠECH UŽIVATELŮ
     cur.execute("SELECT id, username, role FROM users ORDER BY id")
     users = cur.fetchall()
     conn.close()
