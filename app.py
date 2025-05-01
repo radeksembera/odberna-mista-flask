@@ -60,9 +60,10 @@ def login():
         user = cur.fetchone()
         conn.close()
         if user and check_password_hash(user["password_hash"], password):
-            session["user_id"] = user["id"]
-            session["username"] = user["username"]
-            return redirect("/")
+           session["user_id"] = user["id"]
+           session["username"] = user["username"]
+           session["role"] = user["role"]  # přidáno
+           return redirect("/")
         else:
             return render_template("login.html", error="Neplatné přihlašovací údaje.")
     return render_template("login.html")
@@ -105,6 +106,23 @@ def profil():
     user = cur.fetchone()
     conn.close()
     return render_template("profil.html", user=user)
+
+@app.route("/admin/users")
+def admin_users():
+    if not session.get("user_id"):
+        return redirect("/login")
+    
+    if session.get("role") != "admin":
+        return "Nepovolený přístup", 403
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, username, role FROM users ORDER BY id")
+    users = cur.fetchall()
+    conn.close()
+
+    return render_template("admin_users.html", users=users)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
