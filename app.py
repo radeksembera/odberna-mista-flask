@@ -139,6 +139,39 @@ def admin_users():
 
     return render_template("admin_users.html", users=users)
 
+@app.route("/objekty", methods=["GET", "POST"])
+def objekty():
+    if not session.get("user_id"):
+        return redirect("/login")
+    
+    user_id = session["user_id"]
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Přidání nového objektu fakturace
+    if request.method == "POST":
+        nazev = request.form["nazev"]
+        adresa = request.form["adresa"]
+        misto = request.form["misto"]
+        stredisko = request.form["stredisko"]
+        stredisko_mail = request.form["stredisko_mail"]
+        distribuce = request.form["distribuce"]
+        poznamka = request.form["poznamka"]
+
+        cur.execute("""
+            INSERT INTO objekty_fakturace 
+            (user_id, nazev, adresa, misto, stredisko, stredisko_mail, distribuce, poznamka)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (user_id, nazev, adresa, misto, stredisko, stredisko_mail, distribuce, poznamka))
+        conn.commit()
+
+    # Získání všech objektů daného uživatele
+    cur.execute("SELECT * FROM objekty_fakturace WHERE user_id = %s ORDER BY id", (user_id,))
+    objekty = cur.fetchall()
+    conn.close()
+
+    return render_template("objekty.html", objekty=objekty)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
