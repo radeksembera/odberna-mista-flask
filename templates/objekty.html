@@ -1,29 +1,31 @@
 <h1>Moje objekty fakturace</h1>
 
 <table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <td><a href="{{ url_for('odberna_mista_objekt', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
-    <th>Adresa</th>
-    <th>Místo</th>
-    <th>Středisko</th>
-    <th>Středisko mail</th>
-    <th>Distribuce</th>
-    <th>Poznámka</th>
-  </tr>
-  {% for o in objekty %}
-  <tr>
-    <td>{{ o.id }}</td>
-    <td>{{ o.nazev }}</td>
-    <td>{{ o.adresa }}</td>
-    <td>{{ o.misto }}</td>
-    <td>{{ o.stredisko }}</td>
-    <td>{{ o.stredisko_mail }}</td>
-    <td>{{ o.distribuce }}</td>
-    <td>{{ o.poznamka }}</td>
-  </tr>
-  {% endfor %}
-</table>
+    <tr>
+      <th>ID</th>
+      <th>Název</th>
+      <th>Adresa</th>
+      <th>Místo</th>
+      <th>Středisko</th>
+      <th>Středisko mail</th>
+      <th>Distribuce</th>
+      <th>Poznámka</th>
+    </tr>
+  
+    {% for o in objekty %}
+    <tr>
+      <td>{{ o.id }}</td>
+      <td><a href="{{ url_for('odberna_mista_objekt', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
+      <td>{{ o.adresa }}</td>
+      <td>{{ o.misto }}</td>
+      <td>{{ o.stredisko }}</td>
+      <td>{{ o.stredisko_mail }}</td>
+      <td>{{ o.distribuce }}</td>
+      <td>{{ o.poznamka }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  
 
 <h2>Přidat nový objekt</h2>
 <form method="post">
