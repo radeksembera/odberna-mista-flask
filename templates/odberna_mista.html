@@ -1,0 +1,19 @@
+<h1>Odběrná místa pro objekt: {{ objekt.nazev }}</h1>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>ID</th>
+    <th>ID místa</th>
+    <th>Popis</th>
+  </tr>
+  {% for m in mista %}
+  <tr>
+    <td>{{ m.id }}</td>
+    <td>{{ m.id_mista }}</td>
+    <td>{{ m.popis }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<br>
+<a href="{{ url_for('objekty') }}">Zpět na objekty</a>

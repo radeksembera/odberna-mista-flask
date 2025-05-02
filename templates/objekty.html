@@ -3,7 +3,7 @@
 <table border="1" cellpadding="5">
   <tr>
     <th>ID</th>
-    <th>Název</th>
+    <td><a href="{{ url_for('odberna_mista_objekt', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
     <th>Adresa</th>
     <th>Místo</th>
     <th>Středisko</th>

@@ -63,7 +63,7 @@ def login():
            session["user_id"] = user["id"]
            session["username"] = user["username"]
            session["role"] = user["role"]  # přidáno
-           return redirect("/")
+           return redirect("/objekty")
         else:
             return render_template("login.html", error="Neplatné přihlašovací údaje.")
     return render_template("login.html")
@@ -171,6 +171,29 @@ def objekty():
     conn.close()
 
     return render_template("objekty.html", objekty=objekty)
+
+@app.route("/objekty/<int:objekt_id>/mista")
+def odberna_mista_objekt(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    # Ověříme, že objekt fakturace patří tomuto uživateli
+    cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
+    objekt = cur.fetchone()
+
+    if not objekt:
+        conn.close()
+        return "Nepovolený přístup", 403
+
+    # Získáme odběrná místa patřící tomuto objektu
+    cur.execute("SELECT * FROM odberna_mista WHERE objekt_id = %s ORDER BY id", (objekt_id,))
+    mista = cur.fetchall()
+    conn.close()
+
+    return render_template("odberna_mista.html", objekt=objekt, mista=mista)
 
 
 if __name__ == "__main__":
