@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = "tajny_klic"
 
-# Získáme URL připojení z Renderu
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
@@ -18,38 +17,8 @@ def get_db_connection():
 def index():
     if not session.get("user_id"):
         return redirect("/login")
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM odberna_mista")
-    mista = cur.fetchall()
-    conn.close()
-    return render_template("index.html", mista=mista)
+    return redirect("/objekty")
 
-@app.route("/add", methods=["POST"])
-def add():
-    if not session.get("user_id"):
-        return redirect("/login")
-    id_mista = request.form["id_mista"]
-    popis = request.form["popis"]
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("INSERT INTO odberna_mista (id_mista, popis) VALUES (%s, %s)", (id_mista, popis))
-    conn.commit()
-    conn.close()
-    return redirect("/")
-
-@app.route("/delete/<int:id>")
-def delete(id):
-    if not session.get("user_id"):
-        return redirect("/login")
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("DELETE FROM odberna_mista WHERE id = %s", (id,))
-    conn.commit()
-    conn.close()
-    return redirect("/")
-
-@app.route("/login", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -60,7 +29,6 @@ def login():
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
         conn.close()
-
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
@@ -71,12 +39,8 @@ def login():
             else:
                 return redirect("/objekty")
 
-        # Přihlášení selhalo
         return render_template("login.html", error="Neplatné přihlašovací údaje.")
-
-    # GET request = zobraz formulář
     return render_template("login.html")
-
 
 @app.route("/logout")
 def logout():
@@ -128,7 +92,6 @@ def admin_users():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # ZPRACOVÁNÍ FORMULÁŘE
     if request.method == "POST":
         new_username = request.form["username"]
         new_password = request.form["password"]
@@ -142,7 +105,6 @@ def admin_users():
         )
         conn.commit()
 
-    # ZOBRAZENÍ VŠECH UŽIVATELŮ
     cur.execute("SELECT id, username, role FROM users ORDER BY id")
     users = cur.fetchall()
     conn.close()
@@ -188,16 +150,13 @@ def pridat_objekt():
 
     return render_template("objekty_novy.html")
 
-
-@app.route("/objekty/<int:objekt_id>/mista")
+@app.route("/objekty/<int:objekt_id>/mista", methods=["GET", "POST"])
 def odberna_mista_objekt(objekt_id):
     if not session.get("user_id"):
         return redirect("/login")
 
     conn = get_db_connection()
     cur = conn.cursor()
-    
-    # Ověříme, že objekt fakturace patří tomuto uživateli
     cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
     objekt = cur.fetchone()
 
@@ -205,48 +164,20 @@ def odberna_mista_objekt(objekt_id):
         conn.close()
         return "Nepovolený přístup", 403
 
-    # Získáme odběrná místa patřící tomuto objektu
+    if request.method == "POST":
+        id_mista = request.form["id_mista"]
+        popis = request.form["popis"]
+        cur.execute(
+            "INSERT INTO odberna_mista (id_mista, popis, objekt_id) VALUES (%s, %s, %s)",
+            (id_mista, popis, objekt_id)
+        )
+        conn.commit()
+
     cur.execute("SELECT * FROM odberna_mista WHERE objekt_id = %s ORDER BY id", (objekt_id,))
     mista = cur.fetchall()
     conn.close()
 
     return render_template("odberna_mista.html", objekt=objekt, mista=mista)
-
-@app.route("/objekty/<int:objekt_id>/mista")
-def odberna_mista_objekt(objekt_id):
-    if not session.get("user_id"):
-        return redirect("/login")
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT * FROM odberna_mista
-        WHERE objekt_id = %s
-    """, (objekt_id,))
-    mista = cur.fetchall()
-    conn.close()
-
-    return render_template("odberna_mista.html", mista=mista, objekt_id=objekt_id)
-
-@app.route("/objekty/<int:objekt_id>/mista/pridat", methods=["POST"])
-def pridat_misto(objekt_id):
-    if not session.get("user_id"):
-        return redirect("/login")
-
-    id_mista = request.form["id_mista"]
-    popis = request.form["popis"]
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO odberna_mista (id_mista, popis, objekt_id)
-        VALUES (%s, %s, %s)
-    """, (id_mista, popis, objekt_id))
-    conn.commit()
-    conn.close()
-
-    return redirect(url_for("odberna_mista_objekt", objekt_id=objekt_id))
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
