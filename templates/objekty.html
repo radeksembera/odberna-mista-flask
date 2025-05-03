@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-    <meta charset="UTF-8">
-    <title>Moje objekty fakturace</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Moje aplikace</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      </head>
+      
 <body>
     <div style="text-align: right; margin-bottom: 10px;">
         <strong>{{ session['username'] }}</strong>
@@ -28,7 +29,7 @@
         {% for o in objekty %}
         <tr>
             <td>{{ o.id }}</td>
-            <td><a href="{{ url_for('odberna_mista_objekt', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
+            <td><a href="{{ url_for('pridat_misto', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
             <td>{{ o.adresa }}</td>
             <td>{{ o.misto }}</td>
             <td>{{ o.stredisko }}</td>
