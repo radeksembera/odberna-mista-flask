@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Odběrná místa - {{ objekt.nazev }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #333; padding: 5px; text-align: left; }
+        h1 { text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Odběrná místa pro objekt: {{ objekt.nazev }}</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Název</th>
+            <th>Distribuce</th>
+            <th>Sazba</th>
+            <th>Kategorie jističe</th>
+            <th>Hodnota jističe [A]</th>
+            <th>Poznámka</th>
+            <th>EAN</th>
+        </tr>
+        {% for m in mista %}
+        <tr>
+            <td>{{ m.id }}</td>
+            <td>{{ m.id_mista }}</td>
+            <td>{{ m.distribuce }}</td>
+            <td>{{ m.distribucni_sazba }}</td>
+            <td>{{ m.kategorie_jistice }}</td>
+            <td>{{ m.hodnota_jistice }}</td>
+            <td>{{ m.poznamka }}</td>
+            <td>{{ m.ean }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
