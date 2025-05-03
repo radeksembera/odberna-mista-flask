@@ -60,13 +60,13 @@ def login():
         user = cur.fetchone()
         conn.close()
         if user and check_password_hash(user["password_hash"], password):
-           session["user_id"] = user["id"]
-           session["username"] = user["username"]
-           session["role"] = user["role"]  # přidáno
-           return redirect("/objekty")
+            session["user_id"] = user["id"]
+            session["username"] = user["username"]
+            session["role"] = user["role"]
+        if user["role"] == "admin":
+            return redirect("/admin/users")
         else:
-            return render_template("login.html", error="Neplatné přihlašovací údaje.")
-    return render_template("login.html")
+            return redirect("/objekty")
 
 @app.route("/logout")
 def logout():
