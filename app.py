@@ -50,6 +50,7 @@ def delete(id):
     return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"]
@@ -59,14 +60,23 @@ def login():
         cur.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
         conn.close()
+
         if user and check_password_hash(user["password_hash"], password):
             session["user_id"] = user["id"]
             session["username"] = user["username"]
             session["role"] = user["role"]
-        if user["role"] == "admin":
-            return redirect("/admin/users")
-        else:
-            return redirect("/objekty")
+
+            if user["role"] == "admin":
+                return redirect("/admin/users")
+            else:
+                return redirect("/objekty")
+
+        # Přihlášení selhalo
+        return render_template("login.html", error="Neplatné přihlašovací údaje.")
+
+    # GET request = zobraz formulář
+    return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
