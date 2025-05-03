@@ -1,30 +1,75 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Moje aplikace</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
 <h1>Odběrná místa pro objekt: {{ objekt.nazev }}</h1>
 
-<table border="1" cellpadding="5">
-  <tr>
-    <th>ID</th>
-    <th>ID místa</th>
-    <th>Popis</th>
-  </tr>
-  {% for m in mista %}
-  <tr>
-    <td>{{ m.id }}</td>
-    <td>{{ m.id_mista }}</td>
-    <td>{{ m.popis }}</td>
-  </tr>
-  {% endfor %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Název</th>
+      <th>Distribuce</th>
+      <th>Distribuční sazba</th>
+      <th>Kategorie hl. jističe</th>
+      <th>Hodnota hl. jističe [A]</th>
+      <th>Poznámka</th>
+      <th>EAN</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in mista %}
+    <tr>
+      <td>{{ m.id }}</td>
+      <td>{{ m.id_mista }}</td>
+      <td>{{ m.distribuce }}</td>
+      <td>{{ m.distribucni_sazba }}</td>
+      <td>{{ m.kategorie_jistice }}</td>
+      <td>{{ m.hodnota_jistice }}</td>
+      <td>{{ m.poznamka }}</td>
+      <td>{{ m.ean }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
+
 <h2>Přidat nové odběrné místo</h2>
-<form method="POST" action="{{ url_for('odberna_mista_objekt', objekt_id=objekt.id) }}">
-  <label for="id_mista">ID místa:</label><br>
-  <input type="text" name="id_mista" required><br><br>
 
-  <label for="popis">Popis:</label><br>
-  <input type="text" name="popis" required><br><br>
-
-  <button type="submit">Přidat</button>
+<form method="POST" action="{{ url_for('pridat_misto', objekt_id=objekt.id) }}">
+  <div class="mb-3">
+    <label for="id_mista" class="form-label">Název</label>
+    <input type="text" class="form-control" name="id_mista" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Distribuce</label>
+    <input type="text" class="form-control" name="distribuce">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Distribuční sazba</label>
+    <input type="text" class="form-control" name="distribucni_sazba">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Kategorie hlavního jističe</label>
+    <input type="text" class="form-control" name="kategorie_jistice">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Hodnota hlavního jističe [A]</label>
+    <input type="number" class="form-control" name="hodnota_jistice">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Poznámka</label>
+    <textarea class="form-control" name="poznamka"></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">EAN</label>
+    <input type="text" class="form-control" name="ean">
+  </div>
+  <button type="submit" class="btn btn-primary">Přidat</button>
 </form>
+
 
 <br>
 <a href="{{ url_for('objekty') }}">Zpět na objekty</a>

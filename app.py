@@ -182,3 +182,33 @@ def odberna_mista_objekt(objekt_id):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
+from flask import make_response
+from weasyprint import HTML
+
+@app.route("/objekty/<int:objekt_id>/mista/pdf")
+def tisk_odbernych_mist(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
+    objekt = cur.fetchone()
+
+    if not objekt:
+        conn.close()
+        return "Nepovolený přístup", 403
+
+    cur.execute("SELECT * FROM odberna_mista WHERE objekt_id = %s ORDER BY id", (objekt_id,))
+    mista = cur.fetchall()
+    conn.close()
+
+    html = render_template("odberna_mista_pdf.html", objekt=objekt, mista=mista)
+    pdf = HTML(string=html).write_pdf()
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=odberna_mista.pdf"
+    return response
