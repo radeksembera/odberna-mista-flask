@@ -149,17 +149,25 @@ def admin_users():
 
     return render_template("admin_users.html", users=users)
 
-@app.route("/objekty", methods=["GET", "POST"])
+@app.route("/objekty")
 def objekty():
     if not session.get("user_id"):
         return redirect("/login")
-    
-    user_id = session["user_id"]
+
     conn = get_db_connection()
     cur = conn.cursor()
+    cur.execute("SELECT * FROM objekty_fakturace WHERE user_id = %s", (session["user_id"],))
+    objekty = cur.fetchall()
+    conn.close()
+    return render_template("objekty.html", objekty=objekty)
 
-    # Přidání nového objektu fakturace
+@app.route("/objekty/novy", methods=["GET", "POST"])
+def pridat_objekt():
+    if not session.get("user_id"):
+        return redirect("/login")
+
     if request.method == "POST":
+        user_id = session["user_id"]
         nazev = request.form["nazev"]
         adresa = request.form["adresa"]
         misto = request.form["misto"]
@@ -168,19 +176,18 @@ def objekty():
         distribuce = request.form["distribuce"]
         poznamka = request.form["poznamka"]
 
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("""
-            INSERT INTO objekty_fakturace 
-            (user_id, nazev, adresa, misto, stredisko, stredisko_mail, distribuce, poznamka)
+            INSERT INTO objekty_fakturace (user_id, nazev, adresa, misto, stredisko, stredisko_mail, distribuce, poznamka)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         """, (user_id, nazev, adresa, misto, stredisko, stredisko_mail, distribuce, poznamka))
         conn.commit()
+        conn.close()
+        return redirect("/objekty")
 
-    # Získání všech objektů daného uživatele
-    cur.execute("SELECT * FROM objekty_fakturace WHERE user_id = %s ORDER BY id", (user_id,))
-    objekty = cur.fetchall()
-    conn.close()
+    return render_template("objekty_novy.html")
 
-    return render_template("objekty.html", objekty=objekty)
 
 @app.route("/objekty/<int:objekt_id>/mista")
 def odberna_mista_objekt(objekt_id):

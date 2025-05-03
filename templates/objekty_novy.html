@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Přidat nový objekt</title>
+</head>
+<body>
+    <h1>Přidat nový objekt</h1>
+    <form method="POST">
+        <input type="text" name="nazev" placeholder="Název" required><br>
+        <input type="text" name="adresa" placeholder="Adresa"><br>
+        <input type="text" name="misto" placeholder="Místo"><br>
+        <input type="text" name="stredisko" placeholder="Středisko"><br>
+        <input type="email" name="stredisko_mail" placeholder="Středisko mail"><br>
+        <input type="text" name="distribuce" placeholder="Distribuce"><br>
+        <textarea name="poznamka" placeholder="Poznámka"></textarea><br>
+        <button type="submit">Přidat</button>
+    </form>
+    <br>
+    <a href="{{ url_for('objekty') }}">Zpět na hlavní stránku</a>
+</body>
+</html>
