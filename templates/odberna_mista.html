@@ -15,5 +15,16 @@
   {% endfor %}
 </table>
 
+<h2>Přidat nové odběrné místo</h2>
+<form method="POST" action="{{ url_for('odberna_mista_objekt', objekt_id=objekt.id) }}">
+  <label for="id_mista">ID místa:</label><br>
+  <input type="text" name="id_mista" required><br><br>
+
+  <label for="popis">Popis:</label><br>
+  <input type="text" name="popis" required><br><br>
+
+  <button type="submit">Přidat</button>
+</form>
+
 <br>
 <a href="{{ url_for('objekty') }}">Zpět na objekty</a>
