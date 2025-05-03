@@ -76,6 +76,6 @@
         <label>IBAN: <input name="iban" value="{{ user.iban or '' }}" type="text"></label>
         <button type="submit">Uložit změny</button>
     </form>
-    <a href="/">← Zpět</a>
+    <a href="{{ url_for('objekty') }}">Zpět na objekty</a>
 </body>
 </html>
