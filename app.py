@@ -212,6 +212,41 @@ def odberna_mista_objekt(objekt_id):
 
     return render_template("odberna_mista.html", objekt=objekt, mista=mista)
 
+@app.route("/objekty/<int:objekt_id>/mista")
+def odberna_mista_objekt(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT * FROM odberna_mista
+        WHERE objekt_id = %s
+    """, (objekt_id,))
+    mista = cur.fetchall()
+    conn.close()
+
+    return render_template("odberna_mista.html", mista=mista, objekt_id=objekt_id)
+
+@app.route("/objekty/<int:objekt_id>/mista/pridat", methods=["POST"])
+def pridat_misto(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    id_mista = request.form["id_mista"]
+    popis = request.form["popis"]
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO odberna_mista (id_mista, popis, objekt_id)
+        VALUES (%s, %s, %s)
+    """, (id_mista, popis, objekt_id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("odberna_mista_objekt", objekt_id=objekt_id))
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
