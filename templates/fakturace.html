@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Fakturace – {{ objekt.nazev }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            width: 100%;
+            background-color: white;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        .section-title {
+            margin-top: 40px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #555;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fakturace – {{ objekt.nazev }}</h1>
+
+    <div class="section-title">Zálohová faktura</div>
+    <table>
+        <tr><th>Číslo zal. Fak</th><td>28032502</td></tr>
+        <tr><th>Konstantní symbol</th><td>308</td></tr>
+        <tr><th>VS</th><td>28032502</td></tr>
+        <tr><th>Období</th><td>3/2025</td></tr>
+        <tr><th>Datum splatnosti</th><td>28.04.2025</td></tr>
+        <tr><th>Forma úhrady</th><td>příkazem k úhradě</td></tr>
+        <tr><th>Datum vystavení</th><td>14.04.2025</td></tr>
+        <tr><th>Záloha</th><td>850 000,00</td></tr>
+    </table>
+
+    <div class="section-title">Faktura</div>
+    <table>
+        <tr><th>Číslo faktury</th><td>270325044</td></tr>
+        <tr><th>Konstantní symbol</th><td>308</td></tr>
+        <tr><th>VS</th><td>270325044</td></tr>
+        <tr><th>Datum splatnosti</th><td>28.04.2025</td></tr>
+        <tr><th>Datum vystavení</th><td>14.04.2025</td></tr>
+        <tr><th>Datum zdanit. plnění</th><td>31.03.2025</td></tr>
+        <tr><th>Forma úhrady</th><td>příkazem k úhradě</td></tr>
+        <tr><th>Popis dodávky</th><td>Vyúčtování 202503</td></tr>
+        <tr><th>Sazba DPH</th><td>21%</td></tr>
+        <tr><th>Od</th><td>01.03.2025</td></tr>
+        <tr><th>Do</th><td>31.03.2025</td></tr>
+        <tr><th>Header příjemce 1</th><td>Číslo 270325022 Your energy, s.r.o., Italská 2584/69, 120 00 Praha 2 – Vinohrady, DIC CZ24833851, IČO 24833851</td></tr>
+        <tr><th>Header příjemce 2</th><td>Číslo 270325022 Your energy, s.r.o., Italská 2584/69, 120 00 Praha 2 – Vinohrady, DIC CZ24833851, IČO 24833851</td></tr>
+    </table>
+
+    <a href="{{ url_for('objekty') }}">← Zpět na objekty</a>
+</body>
+</html>

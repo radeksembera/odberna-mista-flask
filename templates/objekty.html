@@ -25,6 +25,7 @@
             <th>Středisko mail</th>
             <th>Distribuce</th>
             <th>Poznámka</th>
+            <th>Fakturace</th>
         </tr>
         {% for o in objekty %}
         <tr>
@@ -36,6 +37,7 @@
             <td>{{ o.stredisko_mail }}</td>
             <td>{{ o.distribuce }}</td>
             <td>{{ o.poznamka }}</td>
+            <td><a href="{{ url_for('fakturace_objekt', objekt_id=o.id) }}">Fakturovat</a></td>
         </tr>
         {% endfor %}
     </table>

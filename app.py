@@ -151,6 +151,23 @@ def tisk_odbernych_mist(objekt_id):
     response.headers["Content-Disposition"] = "inline; filename=odberna_mista.pdf"
     return response
 
+@app.route("/objekty/<int:objekt_id>/fakturace")
+def fakturace_objekt(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
+    objekt = cur.fetchone()
+    conn.close()
+
+    if not objekt:
+        return "Nepovolený přístup", 403
+
+    return render_template("fakturace.html", objekt=objekt)
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
