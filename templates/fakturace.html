@@ -55,40 +55,41 @@
 <body>
 
 <h1>Fakturace pro objekt: {{ objekt.nazev }}</h1>
-
+<h2>Parametry faktur: </h2>
 <form method="POST">
-
     <div class="section-title">Zálohová faktura</div>
     <table>
-        <tr><th>Číslo zal. Fak</th><td><input type="text" name="cislo_zalohy" value="{{ zal.cislo_zalohy }}"></td></tr>
-        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol" value="{{ zal.konst_symbol }}"></td></tr>
-        <tr><th>VS</th><td><input type="text" name="vs" value="{{ zal.vs }}"></td></tr>
-        <tr><th>Období</th><td><input type="text" name="obdobi" value="{{ zal.obdobi }}"></td></tr>
-        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost" value="{{ zal.splatnost }}"></td></tr>
-        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady" value="{{ zal.forma_uhrady }}"></td></tr>
-        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni" value="{{ zal.vystaveni }}"></td></tr>
-        <tr><th>Záloha</th><td><input type="number" step="0.01" name="castka_zalohy" value="{{ zal.castka_zalohy }}"></td></tr>
+        <tr><th>Číslo zal. Fak</th><td><input type="text" name="cislo_zalohy" value="{{ zal.cislo_zalohy if zal }}"></td></tr>
+        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol" value="{{ zal.konst_symbol if zal }}"></td></tr>
+        <tr><th>VS</th><td><input type="text" name="vs" value="{{ zal.vs if zal }}"></td></tr>
+        <tr><th>Období</th><td><input type="text" name="obdobi" value="{{ zal.obdobi if zal }}"></td></tr>
+        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost" value="{{ zal.splatnost if zal }}"></td></tr>
+        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady" value="{{ zal.forma_uhrady if zal }}"></td></tr>
+        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni" value="{{ zal.vystaveni if zal }}"></td></tr>
+        <tr><th>Záloha</th><td><input type="text" name="castka_zalohy" value="{{ zal.castka_zalohy if zal }}"></td></tr>
     </table>
 
     <div class="section-title">Faktura</div>
     <table>
-        <tr><th>Číslo faktury</th><td><input type="text" name="cislo_faktury" value="{{ fak.cislo_faktury }}"></td></tr>
-        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol_f" value="{{ fak.konst_symbol }}"></td></tr>
-        <tr><th>VS</th><td><input type="text" name="vs_f" value="{{ fak.vs }}"></td></tr>
-        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost_f" value="{{ fak.splatnost }}"></td></tr>
-        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni_f" value="{{ fak.vystaveni }}"></td></tr>
-        <tr><th>Datum zdanit. plnění</th><td><input type="date" name="zdanitelne_plneni" value="{{ fak.zdanitelne_plneni }}"></td></tr>
-        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady_f" value="{{ fak.forma_uhrady }}"></td></tr>
-        <tr><th>Popis dodávky</th><td><input type="text" name="popis" value="{{ fak.popis }}"></td></tr>
-        <tr><th>Sazba DPH</th><td><input type="text" name="dph" value="{{ fak.dph }}"></td></tr>
-        <tr><th>Od</th><td><input type="date" name="od_data" value="{{ fak.od_data }}"></td></tr>
-        <tr><th>Do</th><td><input type="date" name="do_data" value="{{ fak.do_data }}"></td></tr>
-        <tr><th>Header příjemce 1</th><td><input type="text" name="header1" value="{{ fak.header1 }}"></td></tr>
-        <tr><th>Header příjemce 2</th><td><input type="text" name="header2" value="{{ fak.header2 }}"></td></tr>
+        <tr><th>Číslo faktury</th><td><input type="text" name="cislo_faktury" value="{{ fak.cislo_faktury if fak }}"></td></tr>
+        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol_f" value="{{ fak.konst_symbol if fak }}"></td></tr>
+        <tr><th>VS</th><td><input type="text" name="vs_f" value="{{ fak.vs if fak }}"></td></tr>
+        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost_f" value="{{ fak.splatnost if fak }}"></td></tr>
+        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni_f" value="{{ fak.vystaveni if fak }}"></td></tr>
+        <tr><th>Datum zdanit. plnění</th><td><input type="date" name="zdanitelne_plneni" value="{{ fak.zdanitelne_plneni if fak }}"></td></tr>
+        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady_f" value="{{ fak.forma_uhrady if fak }}"></td></tr>
+        <tr><th>Popis dodávky</th><td><input type="text" name="popis" value="{{ fak.popis if fak }}"></td></tr>
+        <tr><th>Sazba DPH</th><td><input type="text" name="dph" value="{{ fak.dph if fak }}"></td></tr>
+        <tr><th>Od</th><td><input type="date" name="od_data" value="{{ fak.od_data if fak }}"></td></tr>
+        <tr><th>Do</th><td><input type="date" name="do_data" value="{{ fak.do_data if fak }}"></td></tr>
+        <tr><th>Header příjemce 1</th><td><input type="text" name="header1" value="{{ fak.header1 if fak }}"></td></tr>
+        <tr><th>Header příjemce 2</th><td><input type="text" name="header2" value="{{ fak.header2 if fak }}"></td></tr>
     </table>
 
-    <button type="submit" class="btn-save">Uložit změny</button>
+    <br>
+    <button type="submit">💾 Uložit změny</button>
 </form>
+<h2>Akce:</h2>
     <a href="{{ url_for('objekty') }}">← Zpět na objekty</a>
     <script>
         document.querySelectorAll('td[contenteditable="true"]').forEach(cell => {
