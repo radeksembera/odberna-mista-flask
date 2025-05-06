@@ -159,7 +159,7 @@ def fakturace_objekt(objekt_id):
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # Získání objektu
+    # Získáme objekt a ověříme vlastnictví
     cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
     objekt = cur.fetchone()
     if not objekt:
@@ -167,69 +167,51 @@ def fakturace_objekt(objekt_id):
         return "Nepovolený přístup", 403
 
     if request.method == "POST":
-        # Uložení zálohové faktury
+        # Funkce pro převod prázdného na None
+        def get_value(name): return request.form.get(name) or None
+
+        # Zpracování zálohy
+        cur.execute("DELETE FROM zalohy_info WHERE objekt_id = %s", (objekt_id,))
         cur.execute("""
-            INSERT INTO zalohy_info (objekt_id, cislo_zalohy, konst_symbol, vs, obdobi, splatnost, vystaveni, forma_uhrady, castka_zalohy)
+            INSERT INTO zalohy_info (objekt_id, cislo_zalohy, konst_symbol, vs, obdobi, splatnost, forma_uhrady, vystaveni_date, castka_zalohy)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (objekt_id) DO UPDATE
-            SET cislo_zalohy = EXCLUDED.cislo_zalohy,
-                konst_symbol = EXCLUDED.konst_symbol,
-                vs = EXCLUDED.vs,
-                obdobi = EXCLUDED.obdobi,
-                splatnost = EXCLUDED.splatnost,
-                vystaveni = EXCLUDED.vystaveni,
-                forma_uhrady = EXCLUDED.forma_uhrady,
-                castka_zalohy = EXCLUDED.castka_zalohy
         """, (
             objekt_id,
-            request.form.get("cislo_zalohy"),
-            request.form.get("konst_symbol"),
-            request.form.get("vs"),
-            request.form.get("obdobi"),
-            request.form.get("splatnost"),
-            request.form.get("vystaveni"),
-            request.form.get("forma_uhrady"),
-            request.form.get("castka_zalohy")
+            get_value("cislo_zalohy"),
+            get_value("konst_symbol_zal"),
+            get_value("vs_zal"),
+            get_value("obdobi"),
+            get_value("splatnost"),
+            get_value("forma_uhrady"),
+            get_value("vystaveni_date"),
+            get_value("castka_zalohy")
         ))
 
-        # Uložení faktury
+        # Zpracování faktury
+        cur.execute("DELETE FROM faktura_info WHERE objekt_id = %s", (objekt_id,))
         cur.execute("""
-            INSERT INTO faktura_info (objekt_id, cislo_faktury, konst_symbol, vs, splatnost, vystaveni, zdanitelne_plneni, forma_uhrady, popis, dph, od_data, do_data, header1, header2)
+            INSERT INTO faktura_info (objekt_id, cislo_faktury, konst_symbol, vs, splatnost, vystaveni, zdanitelne_plneni, forma_uhrady, popis, dph, od_date, do_date, header1, header2)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (objekt_id) DO UPDATE
-            SET cislo_faktury = EXCLUDED.cislo_faktury,
-                konst_symbol = EXCLUDED.konst_symbol,
-                vs = EXCLUDED.vs,
-                splatnost = EXCLUDED.splatnost,
-                vystaveni = EXCLUDED.vystaveni,
-                zdanitelne_plneni = EXCLUDED.zdanitelne_plneni,
-                forma_uhrady = EXCLUDED.forma_uhrady,
-                popis = EXCLUDED.popis,
-                dph = EXCLUDED.dph,
-                od_data = EXCLUDED.od_data,
-                do_data = EXCLUDED.do_data,
-                header1 = EXCLUDED.header1,
-                header2 = EXCLUDED.header2
         """, (
             objekt_id,
-            request.form.get("cislo_faktury"),
-            request.form.get("konst_symbol_f"),
-            request.form.get("vs_f"),
-            request.form.get("splatnost_f"),
-            request.form.get("vystaveni_f"),
-            request.form.get("zdanitelne_plneni"),
-            request.form.get("forma_uhrady_f"),
-            request.form.get("popis"),
-            request.form.get("dph"),
-            request.form.get("od_data"),
-            request.form.get("do_data"),
-            request.form.get("header1"),
-            request.form.get("header2")
+            get_value("cislo_faktury"),
+            get_value("konst_symbol"),
+            get_value("vs"),
+            get_value("splatnost_f"),
+            get_value("vystaveni"),
+            get_value("zdanitelne_plneni"),
+            get_value("forma_uhrady_f"),
+            get_value("popis"),
+            get_value("dph"),
+            get_value("od_date"),
+            get_value("do_date"),
+            get_value("header1"),
+            get_value("header2")
         ))
 
         conn.commit()
 
-    # Získání dat pro zobrazení
+    # Načti data pro zobrazení
     cur.execute("SELECT * FROM zalohy_info WHERE objekt_id = %s", (objekt_id,))
     zal = cur.fetchone()
 
