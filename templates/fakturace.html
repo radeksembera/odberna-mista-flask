@@ -1,78 +1,95 @@
+
 <!DOCTYPE html>
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Fakturace – {{ objekt.nazev }}</title>
+    <title>Fakturace</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 30px;
+            margin: 40px;
             background-color: #f8f9fa;
+            color: #212529;
         }
         h1 {
-            color: #333;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 20px;
+            margin-top: 40px;
+            font-weight: bold;
+            color: #0d6efd;
         }
         table {
             border-collapse: collapse;
-            margin-bottom: 30px;
             width: 100%;
-            background-color: white;
+            margin-top: 15px;
         }
         th, td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            padding: 10px;
             text-align: left;
         }
         th {
-            background-color: #f0f0f0;
+            background-color: #e9ecef;
         }
-        .section-title {
-            margin-top: 40px;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            color: #555;
+        input[type="text"], input[type="date"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
         }
-        a {
-            text-decoration: none;
-            color: #007bff;
+        .btn-save {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-save:hover {
+            background-color: #0b5ed7;
         }
     </style>
 </head>
 <body>
-    <h1>Fakturace – {{ objekt.nazev }}</h1>
+
+<h1>Fakturace pro objekt: {{ objekt.nazev }}</h1>
+
+<form method="POST">
 
     <div class="section-title">Zálohová faktura</div>
     <table>
-        <tr><th>Číslo zal. Fak</th><td contenteditable="true" data-field="cislo_zalohy" data-id="1">28032502</td></tr>
-        <tr><th>Konstantní symbol</th><td contenteditable="true" data-field="konst_symbol" data-id="1">308</td></tr>
-        <tr><th>VS</th><td contenteditable="true" data-field="vs" data-id="1">28032502</td></tr>
-        <tr><th>Období</th><td contenteditable="true" data-field="obdobi" data-id="1">3/2025</td></tr>
-        <tr><th>Datum splatnosti</th><td contenteditable="true" data-field="splatnost" data-id="1">28.04.2025</td></tr>
-        <tr><th>Forma úhrady</th><td contenteditable="true" data-field="forma_uhrady" data-id="1">příkazem k úhradě</td></tr>
-        <tr><th>Datum vystavení</th><td contenteditable="true" data-field="vystaveni" data-id="1">14.04.2025</td></tr>
-        <tr><th>Záloha</th><td contenteditable="true" data-field="castka_zalohy" data-id="1">850 000,00</td></tr>
+        <tr><th>Číslo zal. Fak</th><td><input type="text" name="cislo_zalohy" value="{{ zal.cislo_zalohy }}"></td></tr>
+        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol" value="{{ zal.konst_symbol }}"></td></tr>
+        <tr><th>VS</th><td><input type="text" name="vs" value="{{ zal.vs }}"></td></tr>
+        <tr><th>Období</th><td><input type="text" name="obdobi" value="{{ zal.obdobi }}"></td></tr>
+        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost" value="{{ zal.splatnost }}"></td></tr>
+        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady" value="{{ zal.forma_uhrady }}"></td></tr>
+        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni" value="{{ zal.vystaveni }}"></td></tr>
+        <tr><th>Záloha</th><td><input type="number" step="0.01" name="castka_zalohy" value="{{ zal.castka_zalohy }}"></td></tr>
     </table>
-    
+
     <div class="section-title">Faktura</div>
     <table>
-        <tr><th>Číslo faktury</th><td contenteditable="true" data-field="cislo_faktury" data-id="2">270325044</td></tr>
-        <tr><th>Konstantní symbol</th><td contenteditable="true" data-field="konst_symbol" data-id="2">308</td></tr>
-        <tr><th>VS</th><td contenteditable="true" data-field="vs" data-id="2">270325044</td></tr>
-        <tr><th>Datum splatnosti</th><td contenteditable="true" data-field="splatnost" data-id="2">28.04.2025</td></tr>
-        <tr><th>Datum vystavení</th><td contenteditable="true" data-field="vystaveni" data-id="2">14.04.2025</td></tr>
-        <tr><th>Datum zdanit. plnění</th><td contenteditable="true" data-field="zdanitelne_plneni" data-id="2">31.03.2025</td></tr>
-        <tr><th>Forma úhrady</th><td contenteditable="true" data-field="forma_uhrady" data-id="2">příkazem k úhradě</td></tr>
-        <tr><th>Popis dodávky</th><td contenteditable="true" data-field="popis" data-id="2">Vyúčtování 202503</td></tr>
-        <tr><th>Sazba DPH</th><td contenteditable="true" data-field="dph" data-id="2">21%</td></tr>
-        <tr><th>Od</th><td contenteditable="true" data-field="od" data-id="2">01.03.2025</td></tr>
-        <tr><th>Do</th><td contenteditable="true" data-field="do" data-id="2">31.03.2025</td></tr>
-        <tr><th>Header příjemce 1</th><td contenteditable="true" data-field="header1" data-id="2">Číslo 270325022 Your energy, s.r.o., Italská 2584/69, 120 00 Praha 2 – Vinohrady, DIC CZ24833851, IČO 24833851</td></tr>
-        <tr><th>Header příjemce 2</th><td contenteditable="true" data-field="header2" data-id="2">Číslo 270325022 Your energy, s.r.o., Italská 2584/69, 120 00 Praha 2 – Vinohrady, DIC CZ24833851, IČO 24833851</td></tr>
+        <tr><th>Číslo faktury</th><td><input type="text" name="cislo_faktury" value="{{ fak.cislo_faktury }}"></td></tr>
+        <tr><th>Konstantní symbol</th><td><input type="text" name="konst_symbol_f" value="{{ fak.konst_symbol }}"></td></tr>
+        <tr><th>VS</th><td><input type="text" name="vs_f" value="{{ fak.vs }}"></td></tr>
+        <tr><th>Datum splatnosti</th><td><input type="date" name="splatnost_f" value="{{ fak.splatnost }}"></td></tr>
+        <tr><th>Datum vystavení</th><td><input type="date" name="vystaveni_f" value="{{ fak.vystaveni }}"></td></tr>
+        <tr><th>Datum zdanit. plnění</th><td><input type="date" name="zdanitelne_plneni" value="{{ fak.zdanitelne_plneni }}"></td></tr>
+        <tr><th>Forma úhrady</th><td><input type="text" name="forma_uhrady_f" value="{{ fak.forma_uhrady }}"></td></tr>
+        <tr><th>Popis dodávky</th><td><input type="text" name="popis" value="{{ fak.popis }}"></td></tr>
+        <tr><th>Sazba DPH</th><td><input type="text" name="dph" value="{{ fak.dph }}"></td></tr>
+        <tr><th>Od</th><td><input type="date" name="od_data" value="{{ fak.od_data }}"></td></tr>
+        <tr><th>Do</th><td><input type="date" name="do_data" value="{{ fak.do_data }}"></td></tr>
+        <tr><th>Header příjemce 1</th><td><input type="text" name="header1" value="{{ fak.header1 }}"></td></tr>
+        <tr><th>Header příjemce 2</th><td><input type="text" name="header2" value="{{ fak.header2 }}"></td></tr>
     </table>
-    
 
+    <button type="submit" class="btn-save">Uložit změny</button>
+</form>
     <a href="{{ url_for('objekty') }}">← Zpět na objekty</a>
-
     <script>
         document.querySelectorAll('td[contenteditable="true"]').forEach(cell => {
             cell.addEventListener('blur', () => {
@@ -103,10 +120,6 @@
         
         </body>
         </html>
-
-
-
-
 
 
 
