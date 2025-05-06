@@ -158,14 +158,27 @@ def fakturace_objekt(objekt_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
+
+    # Získat objekt
     cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
     objekt = cur.fetchone()
-    conn.close()
 
     if not objekt:
+        conn.close()
         return "Nepovolený přístup", 403
 
-    return render_template("fakturace.html", objekt=objekt)
+    # Získat zálohovou fakturu
+    cur.execute("SELECT * FROM zalohy_info WHERE objekt_id = %s LIMIT 1", (objekt_id,))
+    zal = cur.fetchone()
+
+    # Získat běžnou fakturu
+    cur.execute("SELECT * FROM faktura_info WHERE objekt_id = %s LIMIT 1", (objekt_id,))
+    fak = cur.fetchone()
+
+    conn.close()
+
+    return render_template("fakturace.html", objekt=objekt, zal=zal, fak=fak)
+
 
 
 if __name__ == "__main__":
