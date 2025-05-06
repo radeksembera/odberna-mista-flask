@@ -151,7 +151,7 @@ def tisk_odbernych_mist(objekt_id):
     response.headers["Content-Disposition"] = "inline; filename=odberna_mista.pdf"
     return response
 
-@app.route("/objekty/<int:objekt_id>/fakturace")
+@app.route("/objekty/<int:objekt_id>/fakturace", methods=["GET", "POST"])
 def fakturace_objekt(objekt_id):
     if not session.get("user_id"):
         return redirect("/login")
