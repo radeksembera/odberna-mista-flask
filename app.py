@@ -173,7 +173,7 @@ def fakturace_objekt(objekt_id):
         # Zpracování zálohy
         cur.execute("DELETE FROM zalohy_info WHERE objekt_id = %s", (objekt_id,))
         cur.execute("""
-            INSERT INTO zalohy_info (objekt_id, cislo_zalohy, konst_symbol, vs, obdobi, splatnost, forma_uhrady, vystaveni_date, castka_zalohy)
+            INSERT INTO zalohy_info (objekt_id, cislo_zalohy, konst_symbol, vs, obdobi, splatnost, forma_uhrady, vystaveni, castka_zalohy)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
             objekt_id,
@@ -183,7 +183,7 @@ def fakturace_objekt(objekt_id):
             get_value("obdobi"),
             get_value("splatnost"),
             get_value("forma_uhrady"),
-            get_value("vystaveni_date"),
+            get_value("vystaveni"),
             get_value("castka_zalohy")
         ))
 
