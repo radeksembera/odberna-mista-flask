@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="cs">
-    <head>
-        <meta charset="UTF-8">
-        <title>Moje aplikace</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-      </head>
-      
-<body>
-    <div style="text-align: right; margin-bottom: 10px;">
-        <strong>{{ session['username'] }}</strong>
-        | <a href="{{ url_for('profil') }}">Můj profil</a>
-        | <a href="{{ url_for('logout') }}">Odhlásit</a>
-    </div>
+{% extends "base.html" %}
+{% block title %}Moje objekty fakturace{% endblock %}
 
+{% block content %}
     <h1>Moje objekty fakturace</h1>
 
     <table border="1" cellpadding="5">
@@ -44,5 +33,4 @@
         {% endfor %}
     </table>
     <p><a href="{{ url_for('pridat_objekt') }}">Přidat nový objekt</a></p>
-</body>
-</html>
+    {% endblock %}
