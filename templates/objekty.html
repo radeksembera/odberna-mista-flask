@@ -16,6 +16,7 @@
             <th>Poznámka</th>
             <th>OM</th>
             <th>Fakturace</th>
+            <th>Ceny distribuce</th>
         </tr>
         {% for o in objekty %}
         <tr>
@@ -29,13 +30,11 @@
             <td>{{ o.poznamka }}</td>
             <td><a href="{{ url_for('pridat_misto', objekt_id=o.id) }}">spravovat</a></td>
             <td><a href="{{ url_for('fakturace_objekt', objekt_id=o.id) }}">Fakturovat</a></td>
+            <td><a href="{{ url_for('ceny_distribuce', objekt_id=o.id) }}">Zobrazit ceny</a></td>
+              
         </tr>
         {% endfor %}
     </table>
     <p><a href="{{ url_for('pridat_objekt') }}">Přidat nový objekt</a></p>
 
-    <h2>Ceny distribuce</h2>
-    <a href="{{ url_for('objekty') }}">Zobrazit ceny distribuce</a>
-    <h2>Ceny Dodavatele</h2>
-    <a href="{{ url_for('objekty') }}">Zobrazit ceny dodavatele</a>
     {% endblock %}

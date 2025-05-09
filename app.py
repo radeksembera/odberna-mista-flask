@@ -223,6 +223,58 @@ def fakturace_objekt(objekt_id):
     return render_template("fakturace.html", objekt=objekt, zal=zal, fak=fak)
 
 
+from werkzeug.utils import secure_filename
+import pandas as pd
+
+@app.route("/objekty/<int:objekt_id>/ceny-distribuce", methods=["GET", "POST"])
+def ceny_distribuce(objekt_id):
+    if not session.get("user_id"):
+        return redirect("/login")
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Kontrola vlastnictví objektu
+    cur.execute("SELECT * FROM objekty_fakturace WHERE id = %s AND user_id = %s", (objekt_id, session["user_id"]))
+    objekt = cur.fetchone()
+    if not objekt:
+        conn.close()
+        return "Nepovolený přístup", 403
+
+    if request.method == "POST":
+        file = request.files["excel_file"]
+        if file and file.filename.endswith((".xls", ".xlsx")):
+            filename = secure_filename(file.filename)
+            df = pd.read_excel(file)
+            df = df.fillna(0)
+
+            # Odstranit předchozí záznamy
+            cur.execute("DELETE FROM ceny_distribuce WHERE objekt_id = %s", (objekt_id,))
+
+            for _, row in df.iterrows():
+                cur.execute("""
+                    INSERT INTO ceny_distribuce (
+                        objekt_id, distribuce, sazba, jistic, platba_jistic,
+                        distribuce_vt, distribuce_nt, systemove_sluzby,
+                        poze_jistic, poze_spotreba, nesitova_infrastruktura, dan_elektrina
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    objekt_id,
+                    row["Distribuce"], row["Sazba"], row["Jistič"], row["Platba jistič [Kč/měsíc]"],
+                    row["Distribuce VT [Kč/MWh]"], row["Distribuce NT [Kč/MWh]"],
+                    row["Systémové služby [Kč/MWh]"], row["POZE jistič [Kč/měsíc]"],
+                    row["POZE spotřeba [Kč/MWh]"], row["NeSÍTOVÁ inf. [Kč/MWh]"], row["Daň elektřina [Kč/MWh]"]
+                ))
+            conn.commit()
+
+    # Načtení tabulky pro objekt
+    cur.execute("SELECT * FROM ceny_distribuce WHERE objekt_id = %s", (objekt_id,))
+    ceny = cur.fetchall()
+    conn.close()
+
+    return render_template("ceny_distribuce.html", objekt=objekt, ceny=ceny)
+
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Ceny distribuce{% endblock %}
+
+{% block content %}
+<h1>Ceny distribuce pro objekt: {{ objekt.nazev }}</h1>
+
+<h3>Nahrát nový Excel (.xlsx)</h3>
+<form method="POST" enctype="multipart/form-data">
+  <input type="file" name="excel_file" accept=".xlsx" required>
+  <button type="submit" class="btn btn-primary">Nahrát</button>
+</form>
+
+{% if ceny %}
+<hr>
+<h3>Aktuální tabulka</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Distribuce</th>
+      <th>Sazba</th>
+      <th>Jistič</th>
+      <th>Platba jistič [Kč/měsíc]</th>
+      <th>Distribuce VT [Kč/MWh]</th>
+      <th>Distribuce NT [Kč/MWh]</th>
+      <th>Systémové služby [Kč/MWh]</th>
+      <th>POZE jistič [Kč/měsíc]</th>
+      <th>POZE spotřeba [Kč/MWh]</th>
+      <th>NeSÍTOVÁ inf. [Kč/MWh]</th>
+      <th>Daň elektřina [Kč/MWh]</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in ceny %}
+    <tr>
+      <td>{{ r.distribuce }}</td>
+      <td>{{ r.sazba }}</td>
+      <td>{{ r.jistic }}</td>
+      <td>{{ r.platba_jistic }}</td>
+      <td>{{ r.distribuce_vt }}</td>
+      <td>{{ r.distribuce_nt }}</td>
+      <td>{{ r.systemove_sluzby }}</td>
+      <td>{{ r.poze_jistic }}</td>
+      <td>{{ r.poze_spotreba }}</td>
+      <td>{{ r.nesitova_infrastruktura }}</td>
+      <td>{{ r.dan_elektrina }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<br>
+<a href="{{ url_for('objekty') }}">Zpět na objekty</a>
+{% endblock %}
