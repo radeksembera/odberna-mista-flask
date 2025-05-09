@@ -25,18 +25,20 @@
             <th>Středisko mail</th>
             <th>Distribuce</th>
             <th>Poznámka</th>
+            <th>OM</th>
             <th>Fakturace</th>
         </tr>
         {% for o in objekty %}
         <tr>
             <td>{{ o.id }}</td>
-            <td><a href="{{ url_for('pridat_misto', objekt_id=o.id) }}">{{ o.nazev }}</a></td>
+            <td>{{ o.nazev }}</td>
             <td>{{ o.adresa }}</td>
             <td>{{ o.misto }}</td>
             <td>{{ o.stredisko }}</td>
             <td>{{ o.stredisko_mail }}</td>
             <td>{{ o.distribuce }}</td>
             <td>{{ o.poznamka }}</td>
+            <td><a href="{{ url_for('pridat_misto', objekt_id=o.id) }}">spravovat</a></td>
             <td><a href="{{ url_for('fakturace_objekt', objekt_id=o.id) }}">Fakturovat</a></td>
         </tr>
         {% endfor %}
