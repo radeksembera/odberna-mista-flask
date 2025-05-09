@@ -1,9 +1,7 @@
-<head>
-  <meta charset="UTF-8">
-  <title>Moje aplikace</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% extends "base.html" %}
+{% block title %}Moje objekty fakturace{% endblock %}
 
+{% block content %}
 <h1>Odběrná místa pro objekt: {{ objekt.nazev }}</h1>
 
 <table class="table table-striped">
@@ -73,3 +71,4 @@
 
 <br>
 <a href="{{ url_for('objekty') }}">Zpět na objekty</a>
+{% endblock %}

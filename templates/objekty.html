@@ -33,4 +33,9 @@
         {% endfor %}
     </table>
     <p><a href="{{ url_for('pridat_objekt') }}">Přidat nový objekt</a></p>
+
+    <h2>Ceny distribuce</h2>
+    <a href="{{ url_for('objekty') }}">Zobrazit ceny distribuce</a>
+    <h2>Ceny Dodavatele</h2>
+    <a href="{{ url_for('objekty') }}">Zobrazit ceny dodavatele</a>
     {% endblock %}
